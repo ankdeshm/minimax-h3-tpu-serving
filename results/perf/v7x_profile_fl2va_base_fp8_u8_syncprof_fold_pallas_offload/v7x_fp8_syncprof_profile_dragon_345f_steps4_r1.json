@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-11-04T02:04:24.936681+00:00",
+  "request_id": "29f77a2e-e37e-4c63-ba97-b423cc54ac52",
+  "commit_hash": "N/A",
+  "tag": "server_perf_dump",
+  "total_duration_ms": 67923.52677500458,
+  "steps": [
+    {
+      "name": "InputValidationStage",
+      "duration_ms": 0.08447500295005739
+    },
+    {
+      "name": "MiniMaxH3PartitionAdmissionStage",
+      "duration_ms": 0.0923530024010688
+    },
+    {
+      "name": "MiniMaxH3TextEncodingStage",
+      "duration_ms": 2720.887342002243
+    },
+    {
+      "name": "MiniMaxH3VisualEncodingStage",
+      "duration_ms": 2590.1684450218454
+    },
+    {
+      "name": "MiniMaxH3AudioEncodingStage",
+      "duration_ms": 0.23952501942403615
+    },
+    {
+      "name": "MiniMaxH3LatentPreparationStage",
+      "duration_ms": 47.207959985826164
+    },
+    {
+      "name": "MiniMaxH3TimestepPreparationStage",
+      "duration_ms": 0.30279799830168486
+    },
+    {
+      "name": "MiniMaxH3DenoisingStage",
+      "duration_ms": 37753.62946599489
+    },
+    {
+      "name": "MiniMaxH3DecodingStage",
+      "duration_ms": 19596.772491990123
+    }
+  ],
+  "denoise_steps_ms": [
+    {
+      "step": 0,
+      "duration_ms": 12565.18621998839
+    },
+    {
+      "step": 1,
+      "duration_ms": 12530.398577015148
+    },
+    {
+      "step": 2,
+      "duration_ms": 12521.30198001396
+    }
+  ],
+  "memory_checkpoints": {
+    "before_forward": {
+      "allocated_mb": 32734.37,
+      "reserved_mb": 32734.37,
+      "peak_allocated_mb": 32734.37,
+      "peak_reserved_mb": 32734.37,
+      "peak_host_anon_mb": 41302.01
+    },
+    "after_forward": {
+      "allocated_mb": 38550.04,
+      "reserved_mb": 38550.04,
+      "peak_allocated_mb": 64297.42,
+      "peak_reserved_mb": 64297.42,
+      "peak_host_anon_mb": 43329.72
+    }
+  },
+  "meta": {
+    "model": "/dev/shm/MiniMax-H3/FL2VA"
+  }
+}
