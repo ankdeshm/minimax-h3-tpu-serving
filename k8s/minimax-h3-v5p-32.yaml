@@ -1,0 +1,60 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minimax-h3-v5p-32
+  namespace: default
+spec:
+  completions: 8
+  parallelism: 8
+  completionMode: Indexed
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: minimax-h3-v5p-32
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        cloud.google.com/gke-nodepool: "<YOUR_TPU_V5P_32_NODEPOOL>"
+        cloud.google.com/gke-tpu-accelerator: tpu-v5p-slice
+        cloud.google.com/gke-tpu-topology: 2x4x4
+      tolerations:
+        - operator: Exists
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 360Gi
+      containers:
+        - name: minimax-h3-bench
+          image: "<YOUR_ARTIFACT_REGISTRY>/sglang-torchtpu-diffusion:v0.2.0"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: REMOTE_ENCODE_URL
+              value: "http://video-encode-svc.default.svc.cluster.local:8090/encode"
+          resources:
+            requests:
+              google.com/tpu: "4"
+            limits:
+              google.com/tpu: "4"
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+          command:
+            - python3
+            - -u
+            - /workspace/scripts/run_minimax_h3_tpu_benchmark.py
+            - --gcs-bucket
+            - "<YOUR_GCS_BUCKET>"
+            - --gcs-prefix
+            - minimax-h3-tpu-bench/v5p32
+            - --models-prefix
+            - models
+            - --inputs-prefix
+            - minimax-h3-sample-inputs
+            - --accelerator
+            - v5p
+            - --role
+            - v5p32_dedicated

@@ -1,0 +1,262 @@
+{
+  "timestamp": "2026-11-04T02:12:51.949836+00:00",
+  "request_id": "0ff0c72a-c94c-4563-b5a7-a624c2f4a84d",
+  "commit_hash": "N/A",
+  "tag": "server_perf_dump",
+  "total_duration_ms": 122066.54163100757,
+  "steps": [
+    {
+      "name": "InputValidationStage",
+      "duration_ms": 0.07370399544015527
+    },
+    {
+      "name": "MiniMaxH3PartitionAdmissionStage",
+      "duration_ms": 0.06061300518922508
+    },
+    {
+      "name": "MiniMaxH3TextEncodingStage",
+      "duration_ms": 2716.5626930072904
+    },
+    {
+      "name": "MiniMaxH3VisualEncodingStage",
+      "duration_ms": 0.26318797608837485
+    },
+    {
+      "name": "MiniMaxH3AudioEncodingStage",
+      "duration_ms": 0.34325101296417415
+    },
+    {
+      "name": "MiniMaxH3LatentPreparationStage",
+      "duration_ms": 18.65265201195143
+    },
+    {
+      "name": "MiniMaxH3TimestepPreparationStage",
+      "duration_ms": 0.3104759962297976
+    },
+    {
+      "name": "MiniMaxH3DenoisingStage",
+      "duration_ms": 102257.67954700859
+    },
+    {
+      "name": "MiniMaxH3DecodingStage",
+      "duration_ms": 9600.087603990687
+    }
+  ],
+  "denoise_steps_ms": [
+    {
+      "step": 0,
+      "duration_ms": 2151.3013930234592
+    },
+    {
+      "step": 1,
+      "duration_ms": 2082.258857000852
+    },
+    {
+      "step": 2,
+      "duration_ms": 2083.863851003116
+    },
+    {
+      "step": 3,
+      "duration_ms": 2083.921318000648
+    },
+    {
+      "step": 4,
+      "duration_ms": 2081.4813270117156
+    },
+    {
+      "step": 5,
+      "duration_ms": 2081.366056983825
+    },
+    {
+      "step": 6,
+      "duration_ms": 2081.32536400808
+    },
+    {
+      "step": 7,
+      "duration_ms": 2083.7769400095567
+    },
+    {
+      "step": 8,
+      "duration_ms": 2086.02446000441
+    },
+    {
+      "step": 9,
+      "duration_ms": 2079.9156700086314
+    },
+    {
+      "step": 10,
+      "duration_ms": 2085.5125000234693
+    },
+    {
+      "step": 11,
+      "duration_ms": 2085.0307430082466
+    },
+    {
+      "step": 12,
+      "duration_ms": 2081.9850749976467
+    },
+    {
+      "step": 13,
+      "duration_ms": 2083.73375798692
+    },
+    {
+      "step": 14,
+      "duration_ms": 2083.026965992758
+    },
+    {
+      "step": 15,
+      "duration_ms": 2081.4053879876155
+    },
+    {
+      "step": 16,
+      "duration_ms": 2083.37665500585
+    },
+    {
+      "step": 17,
+      "duration_ms": 2079.6540470037144
+    },
+    {
+      "step": 18,
+      "duration_ms": 2082.050201977836
+    },
+    {
+      "step": 19,
+      "duration_ms": 2083.94687998225
+    },
+    {
+      "step": 20,
+      "duration_ms": 2085.057520016562
+    },
+    {
+      "step": 21,
+      "duration_ms": 2089.3314549757633
+    },
+    {
+      "step": 22,
+      "duration_ms": 2087.9554779967293
+    },
+    {
+      "step": 23,
+      "duration_ms": 2085.704432975035
+    },
+    {
+      "step": 24,
+      "duration_ms": 2095.0703760026954
+    },
+    {
+      "step": 25,
+      "duration_ms": 2097.6502810081
+    },
+    {
+      "step": 26,
+      "duration_ms": 2084.1323460044805
+    },
+    {
+      "step": 27,
+      "duration_ms": 2082.79232197674
+    },
+    {
+      "step": 28,
+      "duration_ms": 2087.272288976237
+    },
+    {
+      "step": 29,
+      "duration_ms": 2079.4562470109668
+    },
+    {
+      "step": 30,
+      "duration_ms": 2080.6547139945906
+    },
+    {
+      "step": 31,
+      "duration_ms": 2086.938147986075
+    },
+    {
+      "step": 32,
+      "duration_ms": 2083.130777988117
+    },
+    {
+      "step": 33,
+      "duration_ms": 2084.9578750203364
+    },
+    {
+      "step": 34,
+      "duration_ms": 2085.076249000849
+    },
+    {
+      "step": 35,
+      "duration_ms": 2080.6941539922263
+    },
+    {
+      "step": 36,
+      "duration_ms": 2084.6381259907503
+    },
+    {
+      "step": 37,
+      "duration_ms": 2081.5224689722527
+    },
+    {
+      "step": 38,
+      "duration_ms": 2085.882201005006
+    },
+    {
+      "step": 39,
+      "duration_ms": 2082.0420289819594
+    },
+    {
+      "step": 40,
+      "duration_ms": 2083.286797016626
+    },
+    {
+      "step": 41,
+      "duration_ms": 2078.9199600112624
+    },
+    {
+      "step": 42,
+      "duration_ms": 2081.4787300187163
+    },
+    {
+      "step": 43,
+      "duration_ms": 2080.9532570128795
+    },
+    {
+      "step": 44,
+      "duration_ms": 2080.39907499915
+    },
+    {
+      "step": 45,
+      "duration_ms": 2082.5383880001027
+    },
+    {
+      "step": 46,
+      "duration_ms": 2087.961103010457
+    },
+    {
+      "step": 47,
+      "duration_ms": 2085.9085739939474
+    },
+    {
+      "step": 48,
+      "duration_ms": 2081.7110539937858
+    }
+  ],
+  "memory_checkpoints": {
+    "before_forward": {
+      "allocated_mb": 34502.54,
+      "reserved_mb": 34502.54,
+      "peak_allocated_mb": 34502.54,
+      "peak_reserved_mb": 34502.54,
+      "peak_host_anon_mb": 45605.2
+    },
+    "after_forward": {
+      "allocated_mb": 36021.51,
+      "reserved_mb": 36021.51,
+      "peak_allocated_mb": 47253.76,
+      "peak_reserved_mb": 47253.76,
+      "peak_host_anon_mb": 45605.2
+    }
+  },
+  "meta": {
+    "model": "/dev/shm/MiniMax-H3/FL2VA"
+  }
+}

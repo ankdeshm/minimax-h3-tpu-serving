@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minimax-h3-v7x-single-host
+  namespace: default
+  labels:
+    app: minimax-h3-v7x-single-host
+spec:
+  # 4 independent single TPU v7x hosts (4 chips / 8 TensorCores each):
+  #   pod 0: Multi-reference Ref2VA (1792x768, 345 frames, 6 references, 4 steps, FP8)
+  #   pod 1: Image-to-video FL2VA (1344x768, 345 frames, 4 steps, FP8: official base + Turbo v1.2)
+  #   pod 2: Device-synchronized stage profiling (FL2VA + T2VA)
+  #   pod 3: Device-synchronized stage profiling (Multi-reference Ref2VA)
+  completions: 4
+  parallelism: 4
+  completionMode: Indexed
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        app: minimax-h3-v7x-single-host
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        cloud.google.com/gke-tpu-accelerator: tpu7x
+        cloud.google.com/gke-tpu-topology: 2x2x2
+      tolerations:
+        - operator: Exists
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 850Gi
+      containers:
+        - name: minimax-h3-bench
+          image: "<YOUR_ARTIFACT_REGISTRY>/sglang-torchtpu-diffusion:v0.2.0"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: REMOTE_ENCODE_URL
+              value: "http://video-encode-svc.default.svc.cluster.local:8090/encode"
+          resources:
+            requests:
+              google.com/tpu: "4"
+            limits:
+              google.com/tpu: "4"
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+          command:
+            - python3
+            - -u
+            - /workspace/scripts/run_minimax_h3_tpu_benchmark.py
+            - --gcs-bucket
+            - "<YOUR_GCS_BUCKET>"
+            - --gcs-prefix
+            - minimax-h3-tpu-bench/v7x_single_host
+            - --models-prefix
+            - models
+            - --inputs-prefix
+            - minimax-h3-sample-inputs
+            - --accelerator
+            - v7x
+            - --role
+            - v7x_single_host

@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minimax-h3-gcs-pv
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 512Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: gcsfuse-sc
+  claimRef:
+    namespace: default
+    name: minimax-h3-gcs-pvc
+  mountOptions:
+    - implicit-dirs
+    - metadata-cache:negative-ttl-secs:0
+    - metadata-cache:ttl-secs:-1
+    - metadata-cache:stat-cache-max-size-mb:-1
+    - metadata-cache:type-cache-max-size-mb:-1
+    - file-system:kernel-list-cache-ttl-secs:-1
+    - read:enable-buffered-read:true
+    - read_ahead_kb=131072
+  csi:
+    driver: gcsfuse.csi.storage.gke.io
+    volumeHandle: "<YOUR_GCS_BUCKET>"
+    volumeAttributes:
+      skipCSIBucketAccessCheck: "true"
+      gcsfuseMetadataPrefetchOnMount: "true"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minimax-h3-gcs-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 512Gi
+  volumeName: minimax-h3-gcs-pv
+  storageClassName: gcsfuse-sc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sglang-minimax-h3-tpu
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sglang-minimax-h3-tpu
+  template:
+    metadata:
+      labels:
+        app: sglang-minimax-h3-tpu
+      annotations:
+        gke-gcsfuse/volumes: "true"
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-tpu-accelerator: tpu7x
+        cloud.google.com/gke-tpu-topology: 2x2x1
+      tolerations:
+        - operator: Exists
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 850Gi
+        - name: model-vol
+          persistentVolumeClaim:
+            claimName: minimax-h3-gcs-pvc
+      containers:
+        - name: sglang-tpu
+          image: "<YOUR_ARTIFACT_REGISTRY>/sglang-torchtpu-diffusion:v0.2.0"
+          command: ["sglang", "serve"]
+          args:
+            - --model-path=/model-vol-mount/$(MODEL_FOLDER_PATH)
+            - --host=0.0.0.0
+            - --port=30010
+            - --num-gpus=8
+            - --ulysses-degree=8
+            - --encoder-parallel=fold
+            - --attention-backend=tpu_splash_attn
+            - --dit-cpu-offload=false
+            - --dit-layerwise-offload=false
+            - --text-encoder-cpu-offload=true
+            - --image-encoder-cpu-offload=true
+            - --vae-cpu-offload=true
+            - --pin-cpu-memory=false
+            - --quantization=fp8
+            - --output-path=/dev/shm/sglang_out
+          env:
+            - name: MODEL_FOLDER_PATH
+              value: "models/MiniMaxAI/MiniMax-H3/FL2VA"
+            - name: REMOTE_ENCODE_URL
+              value: "http://video-encode-svc.default.svc.cluster.local:8090/encode"
+          ports:
+            - containerPort: 30010
+          resources:
+            requests:
+              google.com/tpu: "4"
+            limits:
+              google.com/tpu: "4"
+          readinessProbe:
+            tcpSocket:
+              port: 30010
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          volumeMounts:
+            - name: model-vol
+              mountPath: /model-vol-mount
+            - name: dshm
+              mountPath: /dev/shm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sglang-minimax-h3-service
+  namespace: default
+spec:
+  selector:
+    app: sglang-minimax-h3-tpu
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 30010
+      targetPort: 30010
